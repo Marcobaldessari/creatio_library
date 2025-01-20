@@ -4,7 +4,7 @@ function setup() {
   // createCanvas(400, 400); // Example canvas size
   const variableObject = { var1: 0, var2: 0 }; // Example variable object
   midiControllerInstance = new MidiController(variableObject); // Create an instance
-  console.log("creatio v.1.1");
+  console.log("creatio v.1.1 ");
 }
 
 class MidiController {
