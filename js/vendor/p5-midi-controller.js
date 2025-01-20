@@ -1,9 +1,10 @@
 let midiControllerInstance; // Declare the instance variable
 
 function setup() {
-  createCanvas(400, 400); // Example canvas size
+  // createCanvas(400, 400); // Example canvas size
   const variableObject = { var1: 0, var2: 0 }; // Example variable object
   midiControllerInstance = new MidiController(variableObject); // Create an instance
+  console.log("creatio v.1.1");
 }
 
 class MidiController {
@@ -76,6 +77,10 @@ class MidiController {
   keyPressed() {
     if (key === "H" || key === "h") {
       this.showValues = !this.showValues; // Toggle visibility
+    }
+    if (key === "S" || key === "s") {
+      save("mySVG.svg"); // give file name
+      console.log("saved .svg");
     }
   }
 
