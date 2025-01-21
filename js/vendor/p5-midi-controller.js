@@ -85,6 +85,7 @@ class MidiController {
   }
 
   displayValues() {
+    push();
     if (this.showValues) {
       translate(10, 10);
       // Check if values should be displayed
@@ -100,6 +101,7 @@ class MidiController {
         text(`${variableName}: ${variableValue.toFixed(2)}`, 10, 20 + i * 20);
       }
     }
+    pop();
   }
 }
 

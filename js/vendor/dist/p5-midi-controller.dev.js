@@ -123,6 +123,8 @@ function () {
   }, {
     key: "displayValues",
     value: function displayValues() {
+      push();
+
       if (this.showValues) {
         translate(10, 10); // Check if values should be displayed
 
@@ -140,6 +142,8 @@ function () {
           text("".concat(variableName, ": ").concat(variableValue.toFixed(2)), 10, 20 + i * 20);
         }
       }
+
+      pop();
     }
   }]);
 
