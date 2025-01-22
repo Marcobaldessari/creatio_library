@@ -6,11 +6,24 @@ var variables = {
   // Number of vertical lines
   lineLength: 200,
   // Length of each line
-  cazzp: 2
+  knob3: 0,
+  knob4: 0,
+  knob5: 0,
+  knob6: 0,
+  knob7: 0,
+  knob8: 0,
+  currentPalette: 6,
+  slider2: 1,
+  slider3: 1,
+  slider4: 1,
+  slider5: 1,
+  slider6: 1,
+  slider7: 1,
+  slider8: 1
 };
 
 function setup() {
-  createCanvas(630, 1000);
+  createCanvas(windowWidth, windowHeight);
   midiController = new MidiController(variables); // Pass the variables object
 }
 
