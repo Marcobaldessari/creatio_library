@@ -266,9 +266,9 @@ class MidiController {
 // Bind the keyPressed function to the p5.js instance
 function keyPressed() {
   console.log("Key pressed:", key); // Log the key that was pressed
-  if (midiControllerInstance) {
+  if (midiController) {
     // Check if the instance is defined
-    midiControllerInstance.keyPressed(); // Now this should work
+    midiController.keyPressed(); // Now this should work
   }
 }
 
