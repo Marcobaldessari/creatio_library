@@ -26,6 +26,7 @@ class MidiController {
     this.initializeValues();
 
     this.colorPalettes = [
+      ["#bf473a", "#ed3b31", "#f8ca1b", "#8c874b"],
       ["#071224", "#fdffbd"],
       ["#f19b4e", "#7f6640", "#dc5845", "#637055", "#e4d6c8", "#929e79"],
       ["#e6bc8a", "#da4742", "#202125", "#909062", "#dba380", "#dcc6b9"],
@@ -51,7 +52,6 @@ class MidiController {
       ["#92c093", "#b7a6d2"],
       ["#646d4d", "#fac71a", "#e94943", "#8accd8"],
       ["#f69356", "#fcc982", "#9caba3", "#f2f1e1", "#524d35"],
-      ["#bf473a", "#ed3b31", "#f8ca1b", "#8c874b"],
       ["#fffbf4", "#313f5f", "#cd464c", "#fca8bd", "#fa718d"],
       ["#ff8978", "#fccc6f", "#4facc2", "#3292b7", "#7879ab"],
       ["#f7cfd6", "#fd8591", "#fadfe3", "#3a7147", "#2b2828"],
