@@ -240,7 +240,7 @@ class MidiController {
         200,
         15 + (this.knobVariables.length + this.sliderVariables.length) * 20
       ); // Draw rectangle behind the text
-
+      noStroke();
       fill(0); // Set fill color to black for the text
       // Display knob values
       for (let i = 0; i < this.knobVariables.length; i++) {
