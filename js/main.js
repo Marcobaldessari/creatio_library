@@ -1,22 +1,23 @@
-let midiController;
+// let creatio;
 
 let knob = {
   lineCount: 10, // Number of vertical lines
   lineLength: 200, // Length of each line
+  currentPalette: 6,
 };
 
 let slider = {
-  currentPalette: 6,
+  test: 1,
 };
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  midiController = new MidiController(knob, slider); // Pass the knob and slider objects
+  creatio = new Creatio(knob, slider); // Pass the knob and slider objects
 }
 
 function draw() {
-  let strokeColor = midiController.colorPalettes[slider.currentPalette][0];
-  let backgroundColor = midiController.colorPalettes[slider.currentPalette][1];
+  let strokeColor = creatio.colorPalettes[knob.currentPalette][0];
+  let backgroundColor = creatio.colorPalettes[knob.currentPalette][1];
   background(backgroundColor);
   stroke(strokeColor);
 
@@ -31,7 +32,7 @@ function draw() {
     ); // Draw the line
   }
 
-  midiController.displayValues(); // Display the current values
+  creatio.displayValues(); // Display the current values
 }
 
 function windowResized() {
