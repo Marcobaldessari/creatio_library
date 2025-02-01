@@ -4,22 +4,22 @@
 var knob = {
   lineCount: 10,
   // Number of vertical lines
-  lineLength: 200,
-  // Length of each line
-  currentPalette: 6
+  lineLength: 200 // Length of each line
+
 };
-var slider = {
+var ints = {
+  currentPalette: 6,
   test: 1
 };
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  creatio = new Creatio(knob, slider); // Pass the knob and slider objects
+  creatio = new Creatio(knob, ints); // Pass the knob and slider objects
 }
 
 function draw() {
-  var strokeColor = creatio.colorPalettes[knob.currentPalette][0];
-  var backgroundColor = creatio.colorPalettes[knob.currentPalette][1];
+  var strokeColor = creatio.colorPalettes[ints.currentPalette][0];
+  var backgroundColor = creatio.colorPalettes[ints.currentPalette][1];
   background(backgroundColor);
   stroke(strokeColor); // Draw vertical lines
 

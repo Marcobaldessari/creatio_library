@@ -1,32 +1,38 @@
 let creatio; // Declare the instance variable
-let sliderController; // Declare the slider controller instance
 
 function setup() {
   // createCanvas(400, 400); // Example canvas size
-  creatio = new Creatio(knob, slider); // Pass the knob and slider objects
-  sliderController = new SliderController(slider); // Pass the slider object
+  creatio = new Creatio(knob); // Pass only the knob object
 }
 
 class Creatio {
-  constructor(knob, slider) {
+  constructor(knob, newKnobs = {}) {
     this.knob = knob; // Store the knob object
-    this.slider = slider; // Store the slider object
+    this.newKnobs = newKnobs; // Store the new knobs object
     this.knobVariables = Object.keys(knob); // Get variable names for knobs
-    this.sliderVariables = Object.keys(slider); // Get variable names for sliders
+    this.newKnobVariables = Object.keys(newKnobs); // Get variable names for new knobs
     this.values = new Array(this.knobVariables.length).fill(0);
-    this.sliderValues = new Array(this.sliderVariables.length).fill(0);
     this.lastValues = new Array(this.knobVariables.length).fill(0); // Track last values for knobs
-    this.lastSliderValues = new Array(this.sliderVariables.length).fill(0); // Track last values for sliders
     this.midiKnobInputs = [
-      32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43, // Standard MIDI knob inputs
     ]; // MIDI knob inputs
-    this.midiSliderInputs = [224, 225, 226, 227, 228, 229, 230, 231]; // MIDI slider inputs
+    this.newMidiKnobInputs = [44, 45, 46, 47]; // MIDI inputs for new style knobs
     this.showValues = true; // Track visibility of values
     this.setupMidi();
 
-    // Initialize values based on the current state of the knobs and sliders
+    // Initialize values based on the current state of the knobs
     this.initializeValues();
-
     this.colorPalettes = [
       ["#f3f3f3", "#2F3022"],
       ["#bf473a", "#ed3b31", "#f8ca1b", "#8c874b"],
@@ -98,66 +104,6 @@ class Creatio {
       ["#dd8458", "#76b661", "#ddd66d", "#0f0b0c", "#4d493b", "#f3f4ee"],
       ["#81bb91", "#dfc6a2", "#8c603f", "#f7c884"],
       ["#81bb91", "#dfc6a2", "#8c603f", "#f7c884"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
-      ["1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c", "1c1c1c"],
     ];
   }
 
@@ -182,14 +128,10 @@ class Creatio {
   }
 
   initializeValues() {
-    // Set initial values based on the current state of the MIDI knobs and sliders
+    // Set initial values based on the current state of the MIDI knobs
     for (let i = 0; i < this.midiKnobInputs.length; i++) {
       this.lastValues[i] = this.knob[this.knobVariables[i]] || 0; // Initialize last values for knobs
       this.values[i] = this.lastValues[i]; // Set initial values for knobs
-    }
-    for (let i = 0; i < this.midiSliderInputs.length; i++) {
-      this.lastSliderValues[i] = this.slider[this.sliderVariables[i]] || 0; // Initialize last values for sliders
-      this.sliderValues[i] = this.lastSliderValues[i]; // Set initial values for sliders
     }
   }
 
@@ -200,25 +142,26 @@ class Creatio {
     ); // Log the MIDI message
 
     const knobIndex = this.midiKnobInputs.indexOf(data1);
-    const sliderIndex = this.midiSliderInputs.indexOf(status);
+    const newKnobIndex = this.newKnobVariables.indexOf(data1);
 
     if (knobIndex !== -1) {
-      // Handle knob input
+      // Handle standard knob input
       if (data2 < 64) {
-        this.values[knobIndex] +=
-          this.knob[this.knobVariables[knobIndex]] * 0.07; // Increment by one-fifth
-      } else if (data2 > 64) {
         this.values[knobIndex] -=
           this.knob[this.knobVariables[knobIndex]] * 0.07; // Decrement by one-fifth
+      } else if (data2 > 64) {
+        this.values[knobIndex] +=
+          this.knob[this.knobVariables[knobIndex]] * 0.07; // Increment by one-fifth
       }
       this.knob[this.knobVariables[knobIndex]] = this.values[knobIndex]; // Update the variable in the object
       this.lastValues[knobIndex] = data2; // Store the current data2 as the last value
-    } else if (sliderIndex !== -1) {
-      // Handle slider input
-      this.sliderValues[sliderIndex] = data2; // Update slider value based on data2
-      this.slider[this.sliderVariables[sliderIndex]] =
-        this.sliderValues[sliderIndex]; // Update the variable in the object
-      this.lastSliderValues[sliderIndex] = data2; // Store the current data2 as the last value
+    } else if (newKnobIndex !== -1) {
+      // Handle new knob input
+      if (data2 > 64) {
+        this.newKnobs[this.newKnobVariables[newKnobIndex]] += 1; // Increment by 1
+      } else if (data2 < 64) {
+        this.newKnobs[this.newKnobVariables[newKnobIndex]] -= 1; // Decrement by 1
+      }
     }
   }
 
@@ -241,25 +184,25 @@ class Creatio {
         0,
         0,
         200,
-        15 + (this.knobVariables.length + this.sliderVariables.length) * 20
-      ); // Draw rectangle behind the text
+        15 + this.knobVariables.length * 20 + this.newKnobVariables.length * 20
+      ); // Adjust rectangle height for new knobs
       noStroke();
       fill(0); // Set fill color to black for the text
-      // Display knob values
+      // Display standard knob values
       for (let i = 0; i < this.knobVariables.length; i++) {
         const variableName = this.knobVariables[i];
         const variableValue = this.knob[variableName]; // Access the value from the object
         text(`${variableName}: ${variableValue.toFixed(2)}`, 10, 20 + i * 20);
       }
-      // Display slider values
-      for (let i = 0; i < this.sliderVariables.length; i++) {
-        const variableName = this.sliderVariables[i];
-        const variableValue = this.slider[variableName]; // Access the value from the object
+      // Display new knob values
+      for (let i = 0; i < this.newKnobVariables.length; i++) {
+        const newVariableName = this.newKnobVariables[i];
+        const newVariableValue = this.newKnobs[newVariableName]; // Access the value from the new knobs object
         text(
-          `${variableName}: ${variableValue.toFixed(2)}`,
+          `${newVariableName}: ${newVariableValue}`,
           10,
           20 + (this.knobVariables.length + i) * 20
-        );
+        ); // Display new knob values
       }
     }
     pop();
