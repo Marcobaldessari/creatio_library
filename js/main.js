@@ -1,35 +1,32 @@
 // let creatio;
 
-let knob = {
+let v = {
   lineCount: 10, // Number of vertical lines
   lineLength: 200, // Length of each line
 };
 
-let ints = {
+let a = {
   currentPalette: 6,
-  test: 1,
+  translateX: 0,
+  translateY: 0,
+  translateZ: 0,
 };
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  creatio = new Creatio(knob, ints); // Pass the knob and slider objects
+  creatio = new Creatio(v, a); // Pass the variables. v are variables that change proportionally, a are variables that increase/decrease by 1
 }
 
 function draw() {
-  let strokeColor = creatio.colorPalettes[ints.currentPalette][0];
-  let backgroundColor = creatio.colorPalettes[ints.currentPalette][1];
+  let strokeColor = creatio.colorPalettes[a.currentPalette][0];
+  let backgroundColor = creatio.colorPalettes[a.currentPalette][1];
   background(backgroundColor);
   stroke(strokeColor);
 
   // Draw vertical lines
-  for (let i = 0; i < knob.lineCount; i++) {
-    let x = (width / knob.lineCount) * i; // Calculate x position for each line
-    line(
-      x,
-      height / 2 - knob.lineLength / 2,
-      x,
-      height / 2 + knob.lineLength / 2
-    ); // Draw the line
+  for (let i = 0; i < v.lineCount; i++) {
+    let x = (width / v.lineCount) * i; // Calculate x position for each line
+    line(x, height / 2 - v.lineLength / 2, x, height / 2 + v.lineLength / 2); // Draw the line
   }
 
   creatio.displayValues(); // Display the current values

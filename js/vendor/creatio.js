@@ -6,28 +6,16 @@ function setup() {
 }
 
 class Creatio {
-  constructor(knob, newKnobs = {}) {
+  constructor(knob, absoluteKnobs = {}) {
     this.knob = knob; // Store the knob object
-    this.newKnobs = newKnobs; // Store the new knobs object
+    this.absoluteKnobs = absoluteKnobs; // Store the new knobs object
     this.knobVariables = Object.keys(knob); // Get variable names for knobs
-    this.newKnobVariables = Object.keys(newKnobs); // Get variable names for new knobs
+    this.absoluteKnobVariables = Object.keys(absoluteKnobs); // Get variable names for new knobs
     this.values = new Array(this.knobVariables.length).fill(0);
+    this.absoluteValues = new Array(this.absoluteKnobVariables.length).fill(0);
     this.lastValues = new Array(this.knobVariables.length).fill(0); // Track last values for knobs
-    this.midiKnobInputs = [
-      32,
-      33,
-      34,
-      35,
-      36,
-      37,
-      38,
-      39,
-      40,
-      41,
-      42,
-      43, // Standard MIDI knob inputs
-    ]; // MIDI knob inputs
-    this.newMidiKnobInputs = [44, 45, 46, 47]; // MIDI inputs for new style knobs
+    this.midiKnobInputs = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43];
+    this.absoluteKnobInputs = [44, 45, 46, 47];
     this.showValues = true; // Track visibility of values
     this.setupMidi();
 
@@ -141,11 +129,8 @@ class Creatio {
       `MIDI Message: Status: ${status}, Data1: ${data1}, Data2: ${data2}`
     ); // Log the MIDI message
 
-    const knobIndex = this.midiKnobInputs.indexOf(data1);
-    const newKnobIndex = this.newKnobVariables.indexOf(data1);
-
-    if (knobIndex !== -1) {
-      // Handle standard knob input
+    if (data1 < 44) {
+      let knobIndex = this.midiKnobInputs.indexOf(data1);
       if (data2 < 64) {
         this.values[knobIndex] -=
           this.knob[this.knobVariables[knobIndex]] * 0.07; // Decrement by one-fifth
@@ -155,13 +140,26 @@ class Creatio {
       }
       this.knob[this.knobVariables[knobIndex]] = this.values[knobIndex]; // Update the variable in the object
       this.lastValues[knobIndex] = data2; // Store the current data2 as the last value
-    } else if (newKnobIndex !== -1) {
-      // Handle new knob input
-      if (data2 > 64) {
-        this.newKnobs[this.newKnobVariables[newKnobIndex]] += 1; // Increment by 1
-      } else if (data2 < 64) {
-        this.newKnobs[this.newKnobVariables[newKnobIndex]] -= 1; // Decrement by 1
+    } else if (data1 >= 44) {
+      let knobIndex = this.absoluteKnobInputs.indexOf(data1);
+      if (data2 < 64) {
+        this.absoluteValues[knobIndex] -= 1;
+        if (data1 == 44 && this.absoluteValues[knobIndex] < 0) {
+          this.absoluteValues[knobIndex] = this.colorPalettes.length - 1;
+        }
+      } else if (data2 > 64) {
+        this.absoluteValues[knobIndex] += 1;
+        if (
+          data1 == 44 &&
+          this.absoluteValues[knobIndex] >= this.colorPalettes.length
+        ) {
+          this.absoluteValues[knobIndex] = 0;
+        }
       }
+
+      this.absoluteKnobs[this.absoluteKnobVariables[knobIndex]] =
+        this.absoluteValues[knobIndex]; // Update the variable in the object
+      this.lastValues[knobIndex] = data2; // Store the current data2 as the last value
     }
   }
 
@@ -184,7 +182,9 @@ class Creatio {
         0,
         0,
         200,
-        15 + this.knobVariables.length * 20 + this.newKnobVariables.length * 20
+        15 +
+          this.knobVariables.length * 20 +
+          this.absoluteKnobVariables.length * 20
       ); // Adjust rectangle height for new knobs
       noStroke();
       fill(0); // Set fill color to black for the text
@@ -195,11 +195,11 @@ class Creatio {
         text(`${variableName}: ${variableValue.toFixed(2)}`, 10, 20 + i * 20);
       }
       // Display new knob values
-      for (let i = 0; i < this.newKnobVariables.length; i++) {
-        const newVariableName = this.newKnobVariables[i];
-        const newVariableValue = this.newKnobs[newVariableName]; // Access the value from the new knobs object
+      for (let i = 0; i < this.absoluteKnobVariables.length; i++) {
+        const absoluteVariableName = this.absoluteKnobVariables[i];
+        const absoluteVariableValue = this.absoluteKnobs[absoluteVariableName]; // Access the value from the new knobs object
         text(
-          `${newVariableName}: ${newVariableValue}`,
+          `${absoluteVariableName}: ${absoluteVariableValue}`,
           10,
           20 + (this.knobVariables.length + i) * 20
         ); // Display new knob values
